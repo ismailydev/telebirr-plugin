@@ -1,0 +1,68 @@
+{
+  "name": "telebirr-plugin",
+  "version": "1.0.0",
+  "description": "Expo Config Plugin for Telebirr payment integration",
+  "main": "build/runtime.js",
+  "types": "build/runtime.d.ts",
+  "source": "src/runtime.ts",
+  "exports": {
+    ".": {
+      "react-native": "./build/runtime.js",
+      "import": "./build/index.js",
+      "require": "./build/index.js",
+      "types": "./build/index.d.ts",
+      "default": "./build/index.js"
+    },
+    "./runtime": {
+      "import": "./build/runtime.js",
+      "require": "./build/runtime.js",
+      "types": "./build/runtime.d.ts"
+    },
+    "./app.plugin": "./build/index.js"
+  },
+  "react-native": "build/runtime.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "lint": "eslint src --ext .ts,.tsx",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "expo",
+    "config-plugin",
+    "telebirr",
+    "payment",
+    "react-native",
+    "ethiopia"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "peerDependencies": {
+    "expo": ">=49.0.0",
+    "react-native": ">=0.70.0"
+  },
+  "dependencies": {
+    "@expo/config-plugins": "^8.0.0",
+    "@expo/config-types": "^51.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "react-native": "^0.83.1",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "build",
+    "src",
+    "android",
+    "ios",
+    "app.plugin.js",
+    "*.md"
+  ]
+}
