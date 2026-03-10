@@ -12,7 +12,7 @@ export const withTelebirrIOSBridge: ConfigPlugin<Required<TelebirrPluginConfig>>
     const { projectName, projectRoot } = modRequest;
     
     if (pluginConfig.enableLogging) {
-      console.log('Telebirr Plugin: Adding iOS bridge files');
+      // console.log('Telebirr Plugin: Adding iOS bridge files');
     }
     
     try {
@@ -27,7 +27,7 @@ export const withTelebirrIOSBridge: ConfigPlugin<Required<TelebirrPluginConfig>>
       addBridgeFilesToXcode(xcodeProject, projectName, pluginConfig);
       
       if (pluginConfig.enableLogging) {
-        console.log('Telebirr Plugin: Successfully added iOS bridge files');
+        // console.log('Telebirr Plugin: Successfully added iOS bridge files');
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -77,7 +77,7 @@ function copyBridgeFiles(
   }
   
   if (pluginConfig.enableLogging) {
-    console.log('Telebirr Plugin: Copied bridge files to iOS project');
+    // console.log('Telebirr Plugin: Copied bridge files to iOS project');
   }
 }
 
@@ -112,12 +112,92 @@ function addBridgeFilesToXcode(
     lastKnownFileType: 'sourcecode.cpp.objcpp',
   });
   
-  // Add implementation file to compile sources build phase
+  // Manually add to compile sources build phase
+  // This is necessary because addFile doesn't always add .mm files to the build phase
   if (implFileRef) {
-    xcodeProject.addSourceFile(`${projectName}/ExpoTelebirrPayment.mm`, null, key);
+    try {
+      // Get file reference UUID
+      const fileRefUuid = typeof implFileRef === 'string' 
+        ? implFileRef 
+        : String((implFileRef as any)?.uuid || (implFileRef as any)?.fileRef || '');
+      
+      if (fileRefUuid) {
+        // Get all native targets
+        const targets = xcodeProject.pbxNativeTargetSection();
+        
+        for (const targetUuid of Object.keys(targets)) {
+          const target = targets[targetUuid];
+          if (!target || !target.buildPhases) continue;
+          
+          // Find sources build phase
+          for (const phaseUuid of target.buildPhases) {
+            const phaseUuidStr = typeof phaseUuid === 'string' ? phaseUuid : String(phaseUuid);
+            const buildPhase = xcodeProject.hash.project.objects?.PBXSourcesBuildPhase?.[phaseUuidStr];
+            
+            if (!buildPhase || buildPhase.isa !== 'PBXSourcesBuildPhase') continue;
+            
+            // Find or create build file
+            let buildFileUuid: string | undefined;
+            const buildFiles = xcodeProject.hash.project.objects?.PBXBuildFile || {};
+            
+            // Check if build file exists
+            for (const [uuid, buildFile] of Object.entries(buildFiles)) {
+              const bf = buildFile as any;
+              if (bf?.fileRef === fileRefUuid) {
+                buildFileUuid = uuid;
+                break;
+              }
+            }
+            
+            // Create build file if needed
+            if (!buildFileUuid) {
+              const newUuid = xcodeProject.generateUuid();
+              if (!newUuid) {
+                throw new Error('Failed to generate UUID for build file');
+              }
+              buildFileUuid = newUuid as string;
+              if (!xcodeProject.hash.project.objects.PBXBuildFile) {
+                xcodeProject.hash.project.objects.PBXBuildFile = {};
+              }
+              xcodeProject.hash.project.objects.PBXBuildFile[buildFileUuid] = {
+                isa: 'PBXBuildFile',
+                fileRef: fileRefUuid,
+              };
+            }
+            
+            // Add to sources build phase files
+            const finalBuildFileUuid = buildFileUuid;
+            if (finalBuildFileUuid) {
+              if (!buildPhase.files) {
+                buildPhase.files = [];
+              }
+              
+              const files = Array.isArray(buildPhase.files) ? buildPhase.files : [];
+              const alreadyAdded = files.some((f: any) => {
+                const fUuid = typeof f === 'string' ? f : String(f?.value || f);
+                return fUuid === finalBuildFileUuid;
+              });
+              
+              if (!alreadyAdded) {
+                files.push({
+                  value: finalBuildFileUuid,
+                  comment: 'ExpoTelebirrPayment.mm in Sources',
+                });
+                buildPhase.files = files;
+              }
+            }
+          }
+        }
+      }
+    } catch (error) {
+      // Log but don't fail - the file is still in the project
+      if (pluginConfig.enableLogging) {
+        console.warn('Telebirr Plugin: Could not automatically add to compile sources:', error);
+      }
+    }
   }
   
   if (pluginConfig.enableLogging) {
-    console.log('Telebirr Plugin: Added bridge files to Xcode project');
+    // console.log('Telebirr Plugin: Added bridge files to Xcode project');
   }
 }

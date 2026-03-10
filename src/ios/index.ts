@@ -3,18 +3,20 @@ import { TelebirrPluginConfig } from '../types';
 import { withTelebirrFramework } from './framework-manager';
 import { withTelebirrPlist } from './plist-manager';
 import { withTelebirrIOSBridge } from './bridge-manager';
+import { withTelebirrBuildPhaseFix } from './build-phase-fixer';
 
 /**
  * iOS-specific configuration for Telebirr plugin
  */
 export const withTelebirrIOS: ConfigPlugin<Required<TelebirrPluginConfig>> = (config, pluginConfig) => {
   if (pluginConfig.enableLogging) {
-    console.log('Telebirr Plugin: Configuring iOS platform');
+    // console.log('Telebirr Plugin: Configuring iOS platform');
   }
   
   return withPlugins(config, [
     [withTelebirrFramework, pluginConfig],
     [withTelebirrPlist, pluginConfig],
     [withTelebirrIOSBridge, pluginConfig],
+    [withTelebirrBuildPhaseFix, pluginConfig],
   ]);
 };

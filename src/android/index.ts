@@ -10,7 +10,7 @@ import { withTelebirrBridge } from './bridge-manager';
  */
 export const withTelebirrAndroid: ConfigPlugin<Required<TelebirrPluginConfig>> = (config, pluginConfig) => {
   if (pluginConfig.enableLogging) {
-    console.log('Telebirr Plugin: Configuring Android platform');
+    // console.log('Telebirr Plugin: Configuring Android platform');
   }
   
   return withPlugins(config, [

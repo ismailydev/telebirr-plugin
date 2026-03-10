@@ -15,7 +15,7 @@ export const withTelebirrBridge: ConfigPlugin<
       const { platformProjectRoot } = cfg.modRequest;
 
       if (pluginConfig.enableLogging) {
-        console.log("Telebirr Plugin: Adding native bridge files");
+        // console.log("Telebirr Plugin: Adding native bridge files");
       }
 
       try {
@@ -26,9 +26,9 @@ export const withTelebirrBridge: ConfigPlugin<
         await copyBridgeFiles(platformProjectRoot, packageName, pluginConfig);
 
         if (pluginConfig.enableLogging) {
-          console.log(
-            "Telebirr Plugin: Successfully added native bridge files"
-          );
+          // console.log(
+          //   "Telebirr Plugin: Successfully added native bridge files"
+          // );
         }
       } catch (error) {
         const errorMessage =
@@ -234,9 +234,9 @@ async function copyOriginalLibraryFiles(
     }
 
     if (pluginConfig.enableLogging) {
-      console.log(
-        "Telebirr Plugin: Successfully copied original library source files"
-      );
+      // console.log(
+      //   "Telebirr Plugin: Successfully copied original library source files"
+      // );
     }
   } catch (error) {
     if (pluginConfig.enableLogging) {

@@ -25,7 +25,7 @@ export const withTelebirrAAR: ConfigPlugin<Required<TelebirrPluginConfig>> = (co
       const destAarPath = path.join(libsDir, 'EthiopiaPaySdkModule-release.aar');
       
       if (pluginConfig.enableLogging) {
-        console.log(`Telebirr Plugin: Copying ${aarFileName} to ${destAarPath}`);
+        // console.log(`Telebirr Plugin: Copying ${aarFileName} to ${destAarPath}`);
       }
       
       try {
@@ -39,7 +39,7 @@ export const withTelebirrAAR: ConfigPlugin<Required<TelebirrPluginConfig>> = (co
           fs.copyFileSync(sourceAarPath, destAarPath);
           
           if (pluginConfig.enableLogging) {
-            console.log(`Telebirr Plugin: Successfully copied ${aarFileName}`);
+            // console.log(`Telebirr Plugin: Successfully copied ${aarFileName}`);
           }
         } else {
           throw new Error(`AAR file not found: ${sourceAarPath}`);

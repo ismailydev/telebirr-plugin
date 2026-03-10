@@ -26,13 +26,13 @@ export const withTelebirrGradle: ConfigPlugin<Required<TelebirrPluginConfig>> = 
  */
 function addTelebirrDependencies(buildGradle: string, pluginConfig: Required<TelebirrPluginConfig>): string {
   if (pluginConfig.enableLogging) {
-    console.log('Telebirr Plugin: Adding AAR dependency to app/build.gradle');
+    // console.log('Telebirr Plugin: Adding AAR dependency to app/build.gradle');
   }
   
   // Check if react-native-telebirr-payment is already present in dependencies
   if (buildGradle.includes('react-native-telebirr-payment') || buildGradle.includes('EthiopiaPaySdkModule-prod-release')) {
     if (pluginConfig.enableLogging) {
-      console.log('Telebirr Plugin: Original react-native-telebirr-payment detected, skipping AAR dependency to avoid conflicts');
+      // console.log('Telebirr Plugin: Original react-native-telebirr-payment detected, skipping AAR dependency to avoid conflicts');
     }
     // Still add repositories block for consistency
     return addRepositoriesBlock(buildGradle, pluginConfig);
@@ -55,7 +55,7 @@ function addTelebirrDependencies(buildGradle: string, pluginConfig: Required<Tel
   if (addDependency.didMerge) {
     modifiedGradle = addDependency.contents;
     if (pluginConfig.enableLogging) {
-      console.log('Telebirr Plugin: Successfully added AAR dependency');
+      // console.log('Telebirr Plugin: Successfully added AAR dependency');
     }
   } else {
     console.warn('Telebirr Plugin: Could not add AAR dependency to build.gradle. Please add manually:');
@@ -88,7 +88,7 @@ function addRepositoriesBlock(buildGradle: string, pluginConfig: Required<Telebi
   
   if (addRepositories.didMerge) {
     if (pluginConfig.enableLogging) {
-      console.log('Telebirr Plugin: Successfully added repositories block with flatDir');
+      // console.log('Telebirr Plugin: Successfully added repositories block with flatDir');
     }
     return addRepositories.contents;
   } else {
@@ -111,7 +111,7 @@ function ensureRepositoriesBlock(buildGradle: string, pluginConfig: Required<Tel
  */
 function addTelebirrRepositories(buildGradle: string, pluginConfig: Required<TelebirrPluginConfig>): string {
   if (pluginConfig.enableLogging) {
-    console.log('Telebirr Plugin: Checking project-level build.gradle');
+    // console.log('Telebirr Plugin: Checking project-level build.gradle');
   }
   
   // For now, we don't need to add any special repositories at the project level

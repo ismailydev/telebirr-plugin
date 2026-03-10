@@ -9,7 +9,7 @@ export const withTelebirrPlist: ConfigPlugin<Required<TelebirrPluginConfig>> = (
     const { modResults } = cfg;
     
     if (pluginConfig.enableLogging) {
-      console.log('Telebirr Plugin: Configuring iOS Info.plist');
+      // console.log('Telebirr Plugin: Configuring iOS Info.plist');
     }
     
     // Add Telebirr configuration
@@ -81,7 +81,7 @@ function addTelebirrURLSchemes(
   }
   
   if (pluginConfig.enableLogging) {
-    console.log(`Telebirr Plugin: Using URL scheme: ${urlScheme}`);
+    // console.log(`Telebirr Plugin: Using URL scheme: ${urlScheme}`);
   }
   
   // Ensure CFBundleURLTypes exists

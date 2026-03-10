@@ -9,7 +9,7 @@ export const withTelebirrManifest: ConfigPlugin<Required<TelebirrPluginConfig>> 
     const { modResults } = cfg;
     
     if (pluginConfig.enableLogging) {
-      console.log('Telebirr Plugin: Configuring Android manifest');
+      // console.log('Telebirr Plugin: Configuring Android manifest');
     }
     
     // Add required permissions

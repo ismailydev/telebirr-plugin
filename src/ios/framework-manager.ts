@@ -12,7 +12,7 @@ export const withTelebirrFramework: ConfigPlugin<Required<TelebirrPluginConfig>>
     const { projectName, projectRoot } = modRequest;
     
     if (pluginConfig.enableLogging) {
-      console.log('Telebirr Plugin: Integrating iOS framework');
+      // console.log('Telebirr Plugin: Integrating iOS framework');
     }
     
     try {
@@ -27,7 +27,7 @@ export const withTelebirrFramework: ConfigPlugin<Required<TelebirrPluginConfig>>
       addFrameworkToXcodeProject(xcodeProject, projectName, pluginConfig);
       
       if (pluginConfig.enableLogging) {
-        console.log('Telebirr Plugin: Successfully integrated iOS framework');
+        // console.log('Telebirr Plugin: Successfully integrated iOS framework');
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -46,7 +46,7 @@ function copyFrameworkToProject(projectRoot: string, pluginConfig: Required<Tele
   const targetFrameworkPath = path.join(projectRoot, 'ios', 'EthiopiaPaySDK.framework');
   
   if (pluginConfig.enableLogging) {
-    console.log(`Telebirr Plugin: Copying framework from ${sourceFrameworkPath} to ${targetFrameworkPath}`);
+    // console.log(`Telebirr Plugin: Copying framework from ${sourceFrameworkPath} to ${targetFrameworkPath}`);
   }
   
   // Remove existing framework if it exists
@@ -57,6 +57,27 @@ function copyFrameworkToProject(projectRoot: string, pluginConfig: Required<Tele
   // Copy the framework
   if (fs.existsSync(sourceFrameworkPath)) {
     copyRecursiveSync(sourceFrameworkPath, targetFrameworkPath);
+    
+    // Convert binary Info.plist to XML format to prevent UTF-8 encoding errors
+    // This is necessary because React Native's post-install script tries to read
+    // Info.plist files and fails on binary plists
+    const infoPlistPath = path.join(targetFrameworkPath, 'Info.plist');
+    if (fs.existsSync(infoPlistPath)) {
+      try {
+        const { execSync } = require('child_process');
+        // Check if it's a binary plist and convert to XML
+        const fileType = execSync(`file -b "${infoPlistPath}"`, { encoding: 'utf-8' }).trim();
+        if (fileType.includes('Apple binary property list')) {
+          execSync(`plutil -convert xml1 "${infoPlistPath}"`, { stdio: 'inherit' });
+          if (pluginConfig.enableLogging) {
+            // console.log('Telebirr Plugin: Converted Info.plist from binary to XML format');
+          }
+        }
+      } catch (error) {
+        // Log warning but don't fail the build if conversion fails
+        console.warn('Telebirr Plugin: Warning - Could not convert Info.plist:', error);
+      }
+    }
   } else {
     throw new Error(`EthiopiaPaySDK.framework not found at ${sourceFrameworkPath}`);
   }
@@ -104,7 +125,7 @@ function addFrameworkToXcodeProject(
     });
     
     if (pluginConfig.enableLogging) {
-      console.log('Telebirr Plugin: Added framework to Xcode project');
+      // console.log('Telebirr Plugin: Added framework to Xcode project');
     }
   }
 }

@@ -37,14 +37,14 @@ const withTelebirr: ConfigPlugin<TelebirrPluginConfig> = (
 
   // Log configuration in development mode
   if (fullConfig.enableLogging) {
-    console.log("Telebirr Plugin Configuration:", {
-      environment: fullConfig.environment,
-      enableLogging: fullConfig.enableLogging,
-      timeout: fullConfig.timeout,
-      // Don't log sensitive data
-      appId: fullConfig.appId ? "[CONFIGURED]" : "[MISSING]",
-      shortCode: fullConfig.shortCode ? "[CONFIGURED]" : "[MISSING]",
-    });
+    // console.log("Telebirr Plugin Configuration:", {
+    //   environment: fullConfig.environment,
+    //   enableLogging: fullConfig.enableLogging,
+    //   timeout: fullConfig.timeout,
+    //   // Don't log sensitive data
+    //   appId: fullConfig.appId ? "[CONFIGURED]" : "[MISSING]",
+    //   shortCode: fullConfig.shortCode ? "[CONFIGURED]" : "[MISSING]",
+    // });
   }
 
   // Apply platform-specific configurations
